@@ -1,4 +1,4 @@
-package atividade1.pipe;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.Pipe;
@@ -13,18 +13,20 @@ public class produtor implements Runnable{
 
     public produtor(Pipe pipe) {
         this.pipe = pipe;
-        
+        this.random = new Random();
     }
 
     @Override
     public void run() {
+        Pipe.SinkChannel sinkChannel = pipe.sink(); 
+        ByteBuffer buffer = ByteBuffer.allocate(48);
+        
         while (true) {
 
-            Pipe.SinkChannel sinkChannel = pipe.sink(); 
-
-            ByteBuffer buffer = ByteBuffer.allocate(16);
             buffer.clear();
-            buffer.putInt(random.nextInt(1000));
+            int i = random.nextInt(5000);
+            buffer.putInt(i);
+            System.out.println("Produtor: " + i);
             buffer.flip();
 
             while (buffer.hasRemaining()) {
